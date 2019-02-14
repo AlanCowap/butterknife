@@ -72,7 +72,6 @@ import javax.lang.model.type.DeclaredType;
 import javax.lang.model.type.TypeKind;
 import javax.lang.model.type.TypeMirror;
 import javax.lang.model.type.TypeVariable;
-import javax.lang.model.util.Elements;
 import javax.lang.model.util.Types;
 import javax.tools.Diagnostic.Kind;
 
@@ -123,7 +122,6 @@ public final class ButterKnifeProcessor extends AbstractProcessor {
 
   private int sdk = 1;
   private boolean debuggable = true;
-  private boolean useAndroidX = false;
 
   private final RScanner rScanner = new RScanner();
 
@@ -143,7 +141,6 @@ public final class ButterKnifeProcessor extends AbstractProcessor {
     }
 
     debuggable = !"false".equals(env.getOptions().get(OPTION_DEBUGGABLE));
-    useAndroidX = hasAndroidX(env.getElementUtils());
 
     typeUtils = env.getTypeUtils();
     filer = env.getFiler();
@@ -193,7 +190,7 @@ public final class ButterKnifeProcessor extends AbstractProcessor {
       TypeElement typeElement = entry.getKey();
       BindingSet binding = entry.getValue();
 
-      JavaFile javaFile = binding.brewJava(sdk, debuggable, useAndroidX);
+      JavaFile javaFile = binding.brewJava(sdk, debuggable);
       try {
         javaFile.writeTo(filer);
       } catch (IOException e) {
@@ -671,12 +668,8 @@ public final class ButterKnifeProcessor extends AbstractProcessor {
     Id resourceId = elementToId(element, BindColor.class, id);
     BindingSet.Builder builder = getOrCreateBindingBuilder(builderMap, enclosingElement);
 
-    FieldResourceBinding.Type colorStateList = useAndroidX
-        ? FieldResourceBinding.Type.COLOR_STATE_LIST_ANDROIDX
-        : FieldResourceBinding.Type.COLOR_STATE_LIST;
-    FieldResourceBinding.Type color = useAndroidX
-        ? FieldResourceBinding.Type.COLOR_ANDROIDX
-        : FieldResourceBinding.Type.COLOR;
+    FieldResourceBinding.Type colorStateList = FieldResourceBinding.Type.COLOR_STATE_LIST;
+    FieldResourceBinding.Type color = FieldResourceBinding.Type.COLOR;
     builder.addResource(new FieldResourceBinding(
         resourceId,
         name,
@@ -781,8 +774,7 @@ public final class ButterKnifeProcessor extends AbstractProcessor {
     Map<Integer, Id> resourceIds = elementToIds(element, BindDrawable.class, new int[] {id, tint});
 
     BindingSet.Builder builder = getOrCreateBindingBuilder(builderMap, enclosingElement);
-    builder.addResource(new FieldDrawableBinding(resourceIds.get(id), name, resourceIds.get(tint),
-        useAndroidX));
+    builder.addResource(new FieldDrawableBinding(resourceIds.get(id), name, resourceIds.get(tint)));
 
     erasedTargetNames.add(enclosingElement);
   }
@@ -854,7 +846,7 @@ public final class ButterKnifeProcessor extends AbstractProcessor {
 
     BindingSet.Builder builder = getOrCreateBindingBuilder(builderMap, enclosingElement);
     Id resourceId = elementToId(element, BindFont.class, bindFont.value());
-    builder.addResource(new FieldTypefaceBinding(resourceId, name, style, useAndroidX));
+    builder.addResource(new FieldTypefaceBinding(resourceId, name, style));
 
     erasedTargetNames.add(enclosingElement);
   }
@@ -1118,7 +1110,9 @@ public final class ButterKnifeProcessor extends AbstractProcessor {
       TypeVariable typeVariable = (TypeVariable) returnType;
       returnType = typeVariable.getUpperBound();
     }
-    if (!returnType.toString().equals(method.returnType())) {
+    String returnTypeString = returnType.toString();
+    boolean hasReturnValue = !"void".equals(returnTypeString);
+    if (!returnTypeString.equals(method.returnType()) && hasReturnValue) {
       error(element, "@%s methods must have a '%s' return type. (%s.%s)",
           annotationClass.getSimpleName(), method.returnType(),
           enclosingElement.getQualifiedName(), element.getSimpleName());
@@ -1194,7 +1188,8 @@ public final class ButterKnifeProcessor extends AbstractProcessor {
       }
     }
 
-    MethodViewBinding binding = new MethodViewBinding(name, Arrays.asList(parameters), required);
+    MethodViewBinding binding =
+        new MethodViewBinding(name, Arrays.asList(parameters), required, hasReturnValue);
     BindingSet.Builder builder = getOrCreateBindingBuilder(builderMap, enclosingElement);
     Map<Integer, Id> resourceIds = elementToIds(element, annotationClass, ids);
 
@@ -1359,19 +1354,6 @@ public final class ButterKnifeProcessor extends AbstractProcessor {
       }
     }
     return null;
-  }
-
-  /**
-   * Perform two lookups to see if the androidx annotation and core libraries are on the application
-   * classpath. If both aren't present butterknife will leverage support annotations and
-   * compat libraries instead.
-   */
-  private static boolean hasAndroidX(Elements elementUtils) {
-    boolean annotationsPresent
-        = elementUtils.getTypeElement("androidx.annotation.NonNull") != null;
-    boolean corePresent
-        = elementUtils.getTypeElement("androidx.core.content.ContextCompat") != null;
-    return annotationsPresent && corePresent;
   }
 
   private static class RScanner extends TreeScanner {

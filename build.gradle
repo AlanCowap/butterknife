@@ -5,9 +5,8 @@ buildscript {
       'minSdk': 14,
       'compileSdk': 28,
 
-      'supportLibrary': '28.0.0',
-      'androidTools': '26.2.0-rc03',
-      'kotlin': '1.2.70',
+      'androidTools': '26.2.0',
+      'kotlin': '1.2.71',
 
       'release': '8.8.1',
   ]
@@ -17,16 +16,14 @@ buildscript {
           'runtime': 'com.google.android:android:4.1.1.4',
           'gradlePlugin': "com.android.tools.build:gradle:3.1.4",
       ],
-      'support': [
-          'compat': "com.android.support:support-compat:${versions.supportLibrary}",
-          'annotations': "com.android.support:support-annotations:${versions.supportLibrary}",
-          'test': [
-              'runner': 'com.android.support.test:runner:1.0.1',
-              'rules': 'com.android.support.test:rules:1.0.1',
-          ],
-      ],
       'androidx': [
+          'core': "androidx.core:core:1.0.0",
+          'viewpager': "androidx.viewpager:viewpager:1.0.0",
           'annotations': "androidx.annotation:annotation:1.0.0",
+          'test': [
+              'runner': 'androidx.test:runner:1.1.0',
+              'rules': 'androidx.test:rules:1.1.0',
+          ],
       ],
       'lint': [
           'core': "com.android.tools.lint:lint:${versions.androidTools}",
@@ -35,7 +32,6 @@ buildscript {
           'tests': "com.android.tools.lint:lint-tests:${versions.androidTools}",
       ],
       javapoet: 'com.squareup:javapoet:1.10.0',
-      javaparser: 'com.github.javaparser:javaparser-core:3.5.14',
       junit: 'junit:junit:4.12',
       truth: 'com.google.truth:truth:0.42',
       compiletesting: 'com.google.testing.compile:compile-testing:0.15',
@@ -55,13 +51,13 @@ buildscript {
 
   repositories {
     mavenCentral()
-    jcenter()
     google()
+    jcenter()
     gradlePluginPortal()
   }
 
   dependencies {
-    classpath 'com.android.tools.build:gradle:3.2.0-rc03'
+    classpath 'com.android.tools.build:gradle:3.2.0'
     classpath "org.jetbrains.kotlin:kotlin-gradle-plugin:${versions.kotlin}"
     classpath 'com.github.ben-manes:gradle-versions-plugin:0.17.0'
     classpath 'net.ltgt.gradle:gradle-errorprone-plugin:0.0.16'

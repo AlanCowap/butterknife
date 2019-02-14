@@ -6,13 +6,18 @@ android {
   defaultConfig {
     minSdkVersion versions.minSdk
 
-    testInstrumentationRunner 'android.support.test.runner.AndroidJUnitRunner'
+    testInstrumentationRunner 'androidx.test.runner.AndroidJUnitRunner'
 
     javaCompileOptions {
       annotationProcessorOptions {
         includeCompileClasspath = true
       }
     }
+  }
+
+  compileOptions {
+    sourceCompatibility JavaVersion.VERSION_1_8
+    targetCompatibility JavaVersion.VERSION_1_8
   }
 
   lintOptions {
@@ -30,13 +35,13 @@ android {
 
 dependencies {
   api project(':butterknife-annotations')
-  api deps.support.compat
+  api deps.androidx.core
 
   lintChecks project(':butterknife-lint')
 
   androidTestImplementation deps.junit
   androidTestImplementation deps.truth
-  androidTestImplementation deps.support.test.runner
+  androidTestImplementation deps.androidx.test.runner
   androidTestAnnotationProcessor project(':butterknife-compiler')
 
   testImplementation deps.junit

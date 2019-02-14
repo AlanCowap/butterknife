@@ -1,11 +1,9 @@
 package butterknife;
 
 import android.content.Context;
-import android.support.annotation.NonNull;
-import android.support.annotation.Nullable;
-import android.support.test.InstrumentationRegistry;
 import android.util.Property;
 import android.view.View;
+import androidx.test.InstrumentationRegistry;
 import java.util.List;
 import org.junit.Test;
 
@@ -24,21 +22,9 @@ public class ViewCollectionsTest {
         }
       };
   private static final Setter<View, Boolean> SETTER_ENABLED =
-      new Setter<View, Boolean>() {
-        @Override public void set(@NonNull View view, @Nullable Boolean value, int index) {
-          view.setEnabled(value);
-        }
-      };
-  private static final Action<View> ACTION_DISABLE = new Action<View>() {
-    @Override public void apply(@NonNull View view, int index) {
-      view.setEnabled(false);
-    }
-  };
-  private static final Action<View> ACTION_ZERO_ALPHA = new Action<View>() {
-    @Override public void apply(@NonNull View view, int index) {
-      view.setAlpha(0f);
-    }
-  };
+      (view, value, index) -> view.setEnabled(value);
+  private static final Action<View> ACTION_DISABLE = (view, index) -> view.setEnabled(false);
+  private static final Action<View> ACTION_ZERO_ALPHA = (view, index) -> view.setAlpha(0f);
 
   private final Context context = InstrumentationRegistry.getContext();
 

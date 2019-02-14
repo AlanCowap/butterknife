@@ -1,6 +1,6 @@
 package butterknife.compiler;
 
-import android.support.annotation.Nullable;
+import androidx.annotation.Nullable;
 import com.google.common.collect.ImmutableList;
 import com.google.errorprone.annotations.Immutable;
 import com.squareup.javapoet.ClassName;
@@ -15,11 +15,7 @@ final class FieldResourceBinding implements ResourceBinding {
     BOOL("getBoolean"),
     COLOR(new ResourceMethod(BindingSet.CONTEXT_COMPAT, "getColor", false, 1),
         new ResourceMethod(null, "getColor", false, 23)),
-    COLOR_ANDROIDX(new ResourceMethod(BindingSet.CONTEXT_COMPAT_ANDROIDX, "getColor", false, 1),
-        new ResourceMethod(null, "getColor", false, 23)),
-    COLOR_STATE_LIST(new ResourceMethod(BindingSet.CONTEXT_COMPAT, "getColorStateList", false, 1),
-        new ResourceMethod(null, "getColorStateList", false, 23)),
-    COLOR_STATE_LIST_ANDROIDX(new ResourceMethod(BindingSet.CONTEXT_COMPAT_ANDROIDX,
+    COLOR_STATE_LIST(new ResourceMethod(BindingSet.CONTEXT_COMPAT,
         "getColorStateList", false, 1),
         new ResourceMethod(null, "getColorStateList", false, 23)),
     DIMEN_AS_INT("getDimensionPixelSize"),

@@ -7,59 +7,13 @@ import javax.tools.JavaFileObject;
 import javax.tools.StandardLocation;
 import org.junit.Test;
 
-import static butterknife.TestStubs.ANDROIDX_CONTEXT_COMPAT;
 import static com.google.common.truth.Truth.assertAbout;
 import static com.google.testing.compile.JavaSourceSubjectFactory.javaSource;
 import static com.google.testing.compile.JavaSourcesSubjectFactory.javaSources;
 import static java.util.Arrays.asList;
 
 public class BindViewTest {
-  @Test public void bindingView() {
-    JavaFileObject source = JavaFileObjects.forSourceString("test.Test", ""
-        + "package test;\n"
-        + "import android.view.View;\n"
-        + "import butterknife.BindView;\n"
-        + "public class Test {\n"
-        + "    @BindView(1) View thing;\n"
-        + "}"
-    );
-
-    JavaFileObject bindingSource = JavaFileObjects.forSourceString("test/Test_ViewBinding", ""
-        + "package test;\n"
-        + "import android.support.annotation.CallSuper;\n"
-        + "import android.support.annotation.UiThread;\n"
-        + "import android.view.View;\n"
-        + "import butterknife.Unbinder;\n"
-        + "import butterknife.internal.Utils;\n"
-        + "import java.lang.IllegalStateException;\n"
-        + "import java.lang.Override;\n"
-        + "public class Test_ViewBinding implements Unbinder {\n"
-        + "  private Test target;\n"
-        + "  @UiThread\n"
-        + "  public Test_ViewBinding(Test target, View source) {\n"
-        + "    this.target = target;\n"
-        + "    target.thing = Utils.findRequiredView(source, 1, \"field 'thing'\");\n"
-        + "  }\n"
-        + "  @Override\n"
-        + "  @CallSuper\n"
-        + "  public void unbind() {\n"
-        + "    Test target = this.target;\n"
-        + "    if (target == null) throw new IllegalStateException(\"Bindings already cleared.\");\n"
-        + "    this.target = null;\n"
-        + "    target.thing = null;\n"
-        + "  }\n"
-        + "}"
-    );
-
-    assertAbout(javaSource()).that(source)
-        .withCompilerOptions("-Xlint:-processing")
-        .processedWith(new ButterKnifeProcessor())
-        .compilesWithoutWarnings()
-        .and()
-        .generatesSources(bindingSource);
-  }
-
-  @Test public void bindingViewAndroidX() {
+  @Test public void bindingViewNonDebuggable() {
     JavaFileObject source = JavaFileObjects.forSourceString("test.Test", ""
         + "package test;\n"
         + "import android.view.View;\n"
@@ -74,52 +28,6 @@ public class BindViewTest {
         + "import android.view.View;\n"
         + "import androidx.annotation.CallSuper;\n"
         + "import androidx.annotation.UiThread;\n"
-        + "import butterknife.Unbinder;\n"
-        + "import butterknife.internal.Utils;\n"
-        + "import java.lang.IllegalStateException;\n"
-        + "import java.lang.Override;\n"
-        + "public class Test_ViewBinding implements Unbinder {\n"
-        + "  private Test target;\n"
-        + "  @UiThread\n"
-        + "  public Test_ViewBinding(Test target, View source) {\n"
-        + "    this.target = target;\n"
-        + "    target.thing = Utils.findRequiredView(source, 1, \"field 'thing'\");\n"
-        + "  }\n"
-        + "  @Override\n"
-        + "  @CallSuper\n"
-        + "  public void unbind() {\n"
-        + "    Test target = this.target;\n"
-        + "    if (target == null) throw new IllegalStateException(\"Bindings already cleared.\");\n"
-        + "    this.target = null;\n"
-        + "    target.thing = null;\n"
-        + "  }\n"
-        + "}"
-    );
-
-    assertAbout(javaSources())
-        .that(asList(source, ANDROIDX_CONTEXT_COMPAT))
-        .withCompilerOptions("-Xlint:-processing")
-        .processedWith(new ButterKnifeProcessor())
-        .compilesWithoutWarnings()
-        .and()
-        .generatesSources(bindingSource);
-  }
-
-  @Test public void bindingViewNonDebuggable() {
-    JavaFileObject source = JavaFileObjects.forSourceString("test.Test", ""
-        + "package test;\n"
-        + "import android.view.View;\n"
-        + "import butterknife.BindView;\n"
-        + "public class Test {\n"
-        + "    @BindView(1) View thing;\n"
-        + "}"
-    );
-
-    JavaFileObject bindingSource = JavaFileObjects.forSourceString("test/Test_ViewBinding", ""
-        + "package test;\n"
-        + "import android.support.annotation.CallSuper;\n"
-        + "import android.support.annotation.UiThread;\n"
-        + "import android.view.View;\n"
         + "import butterknife.Unbinder;\n"
         + "import java.lang.IllegalStateException;\n"
         + "import java.lang.Override;\n"
@@ -161,10 +69,10 @@ public class BindViewTest {
 
     JavaFileObject bindingSource = JavaFileObjects.forSourceString("test/Test_ViewBinding", ""
         + "package test;\n"
-        + "import android.support.annotation.CallSuper;\n"
-        + "import android.support.annotation.UiThread;\n"
         + "import android.view.View;\n"
         + "import android.widget.TextView;\n"
+        + "import androidx.annotation.CallSuper;\n"
+        + "import androidx.annotation.UiThread;\n"
         + "import butterknife.Unbinder;\n"
         + "import java.lang.IllegalStateException;\n"
         + "import java.lang.Override;\n"
@@ -241,8 +149,8 @@ public class BindViewTest {
 
     JavaFileObject bindingSource = JavaFileObjects.forSourceString("test/Test_ViewBinding", ""
         + "package test;\n"
-        + "import android.support.annotation.UiThread;\n"
         + "import android.view.View;\n"
+        + "import androidx.annotation.UiThread;\n"
         + "import butterknife.Unbinder;\n"
         + "import butterknife.internal.Utils;\n"
         + "import java.lang.IllegalStateException;\n"
@@ -292,9 +200,9 @@ public class BindViewTest {
 
     JavaFileObject bindingBaseSource = JavaFileObjects.forSourceString("test/Base_ViewBinding", ""
         + "package test;\n"
-        + "import android.support.annotation.CallSuper;\n"
-        + "import android.support.annotation.UiThread;\n"
         + "import android.view.View;\n"
+        + "import androidx.annotation.CallSuper;\n"
+        + "import androidx.annotation.UiThread;\n"
         + "import butterknife.Unbinder;\n"
         + "import butterknife.internal.Utils;\n"
         + "import java.lang.IllegalStateException;\n"
@@ -319,8 +227,8 @@ public class BindViewTest {
 
     JavaFileObject bindingTestSource = JavaFileObjects.forSourceString("test/Test_ViewBinding", ""
         + "package test;\n"
-        + "import android.support.annotation.UiThread;\n"
         + "import android.view.View;\n"
+        + "import androidx.annotation.UiThread;\n"
         + "import butterknife.internal.Utils;\n"
         + "import java.lang.IllegalStateException;\n"
         + "import java.lang.Override;\n"
@@ -351,53 +259,6 @@ public class BindViewTest {
         .generatesSources(bindingBaseSource, bindingTestSource);
   }
 
-  @Test public void bindingViewInnerClass() {
-    JavaFileObject source = JavaFileObjects.forSourceString("test.Outer", ""
-        + "package test;\n"
-        + "import android.view.View;\n"
-        + "import butterknife.BindView;\n"
-        + "public class Outer {\n"
-        + "  public static class Test {\n"
-        + "    @BindView(1) View thing;\n"
-        + "  }\n"
-        + "}"
-    );
-
-    JavaFileObject bindingSource = JavaFileObjects.forSourceString("test/Outer$Test_ViewBinding", ""
-        + "package test;\n"
-        + "import android.support.annotation.CallSuper;\n"
-        + "import android.support.annotation.UiThread;\n"
-        + "import android.view.View;\n"
-        + "import butterknife.Unbinder;\n"
-        + "import butterknife.internal.Utils;\n"
-        + "import java.lang.IllegalStateException;\n"
-        + "import java.lang.Override;\n"
-        + "public class Outer$Test_ViewBinding implements Unbinder {\n"
-        + "  private Outer.Test target;\n"
-        + "  @UiThread\n"
-        + "  public Outer$Test_ViewBinding(Outer.Test target, View source) {\n"
-        + "    this.target = target;\n"
-        + "    target.thing = Utils.findRequiredView(source, 1, \"field 'thing'\");\n"
-        + "  }\n"
-        + "  @Override\n"
-        + "  @CallSuper\n"
-        + "  public void unbind() {\n"
-        + "    Outer.Test target = this.target;\n"
-        + "    if (target == null) throw new IllegalStateException(\"Bindings already cleared.\");\n"
-        + "    this.target = null;\n"
-        + "    target.thing = null;\n"
-        + "  }\n"
-        + "}"
-    );
-
-    assertAbout(javaSource()).that(source)
-        .withCompilerOptions("-Xlint:-processing")
-        .processedWith(new ButterKnifeProcessor())
-        .compilesWithoutWarnings()
-        .and()
-        .generatesSources(bindingSource);
-  }
-
   @Test public void bindingViewUppercasePackageName() {
     JavaFileObject source = JavaFileObjects.forSourceString("com.Example.Test", ""
         + "package com.Example;\n"
@@ -410,9 +271,9 @@ public class BindViewTest {
 
     JavaFileObject bindingSource = JavaFileObjects.forSourceString("test/Test_ViewBinding", ""
         + "package com.Example;\n"
-        + "import android.support.annotation.CallSuper;\n"
-        + "import android.support.annotation.UiThread;\n"
         + "import android.view.View;\n"
+        + "import androidx.annotation.CallSuper;\n"
+        + "import androidx.annotation.UiThread;\n"
         + "import butterknife.Unbinder;\n"
         + "import butterknife.internal.Utils;\n"
         + "import java.lang.IllegalStateException;\n"
@@ -456,9 +317,9 @@ public class BindViewTest {
 
     JavaFileObject bindingSource = JavaFileObjects.forSourceString("test/Test_ViewBinding", ""
         + "package test;\n"
-        + "import android.support.annotation.CallSuper;\n"
-        + "import android.support.annotation.UiThread;\n"
         + "import android.view.View;\n"
+        + "import androidx.annotation.CallSuper;\n"
+        + "import androidx.annotation.UiThread;\n"
         + "import butterknife.Unbinder;\n"
         + "import butterknife.internal.Utils;\n"
         + "import java.lang.IllegalStateException;\n"
@@ -502,10 +363,10 @@ public class BindViewTest {
 
     JavaFileObject bindingSource = JavaFileObjects.forSourceString("test/Test_ViewBinding", ""
         + "package test;\n"
-        + "import android.support.annotation.CallSuper;\n"
-        + "import android.support.annotation.UiThread;\n"
         + "import android.view.View;\n"
         + "import android.widget.TextView;\n"
+        + "import androidx.annotation.CallSuper;\n"
+        + "import androidx.annotation.UiThread;\n"
         + "import butterknife.Unbinder;\n"
         + "import butterknife.internal.Utils;\n"
         + "import java.lang.IllegalStateException;\n"
@@ -552,9 +413,9 @@ public class BindViewTest {
 
     JavaFileObject bindingSource = JavaFileObjects.forSourceString("test/Test_ViewBinding", ""
         + "package test;\n"
-        + "import android.support.annotation.CallSuper;\n"
-        + "import android.support.annotation.UiThread;\n"
         + "import android.view.View;\n"
+        + "import androidx.annotation.CallSuper;\n"
+        + "import androidx.annotation.UiThread;\n"
         + "import butterknife.Unbinder;\n"
         + "import butterknife.internal.DebouncingOnClickListener;\n"
         + "import butterknife.internal.Utils;\n"
@@ -612,10 +473,10 @@ public class BindViewTest {
 
     JavaFileObject bindingSource = JavaFileObjects.forSourceString("test/Test_ViewBinding", ""
         + "package test;\n"
-        + "import android.support.annotation.CallSuper;\n"
-        + "import android.support.annotation.UiThread;\n"
         + "import android.view.View;\n"
         + "import android.widget.Button;\n"
+        + "import androidx.annotation.CallSuper;\n"
+        + "import androidx.annotation.UiThread;\n"
         + "import butterknife.Unbinder;\n"
         + "import butterknife.internal.DebouncingOnClickListener;\n"
         + "import butterknife.internal.Utils;\n"
@@ -690,9 +551,9 @@ public class BindViewTest {
 
     JavaFileObject bindingSource = JavaFileObjects.forSourceString("test/Test_ViewBinding", ""
         + "package test;\n"
-        + "import android.support.annotation.CallSuper;\n"
-        + "import android.support.annotation.UiThread;\n"
         + "import android.view.View;\n"
+        + "import androidx.annotation.CallSuper;\n"
+        + "import androidx.annotation.UiThread;\n"
         + "import butterknife.Unbinder;\n"
         + "import java.lang.IllegalStateException;\n"
         + "import java.lang.Override;\n"
@@ -749,9 +610,9 @@ public class BindViewTest {
 
     JavaFileObject binding1Source = JavaFileObjects.forSourceString("test/Test_ViewBinding", ""
         + "package test;\n"
-        + "import android.support.annotation.CallSuper;\n"
-        + "import android.support.annotation.UiThread;\n"
         + "import android.view.View;\n"
+        + "import androidx.annotation.CallSuper;\n"
+        + "import androidx.annotation.UiThread;\n"
         + "import butterknife.Unbinder;\n"
         + "import butterknife.internal.Utils;\n"
         + "import java.lang.IllegalStateException;\n"
@@ -776,8 +637,8 @@ public class BindViewTest {
 
     JavaFileObject binding2Source = JavaFileObjects.forSourceString("test/TestOne_ViewBinding", ""
         + "package test;\n"
-        + "import android.support.annotation.UiThread;\n"
         + "import android.view.View;\n"
+        + "import androidx.annotation.UiThread;\n"
         + "import butterknife.internal.Utils;\n"
         + "import java.lang.IllegalStateException;\n"
         + "import java.lang.Override;\n"
@@ -835,9 +696,9 @@ public class BindViewTest {
 
     JavaFileObject binding1Source = JavaFileObjects.forSourceString("test/Test_ViewBinding", ""
         + "package test;\n"
-        + "import android.support.annotation.CallSuper;\n"
-        + "import android.support.annotation.UiThread;\n"
         + "import android.view.View;\n"
+        + "import androidx.annotation.CallSuper;\n"
+        + "import androidx.annotation.UiThread;\n"
         + "import butterknife.Unbinder;\n"
         + "import butterknife.internal.Utils;\n"
         + "import java.lang.IllegalStateException;\n"
@@ -862,8 +723,8 @@ public class BindViewTest {
 
     JavaFileObject binding2Source = JavaFileObjects.forSourceString("test/TestOne_ViewBinding", ""
         + "package test;\n"
-        + "import android.support.annotation.UiThread;\n"
         + "import android.view.View;\n"
+        + "import androidx.annotation.UiThread;\n"
         + "import butterknife.internal.Utils;\n"
         + "import java.lang.IllegalStateException;\n"
         + "import java.lang.Override;\n"

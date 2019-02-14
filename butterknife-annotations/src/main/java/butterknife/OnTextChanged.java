@@ -1,15 +1,15 @@
 package butterknife;
 
-import android.support.annotation.IdRes;
 import android.text.TextWatcher;
 import android.view.View;
+import androidx.annotation.IdRes;
 import butterknife.internal.ListenerClass;
 import butterknife.internal.ListenerMethod;
 import java.lang.annotation.Retention;
 import java.lang.annotation.Target;
 
 import static java.lang.annotation.ElementType.METHOD;
-import static java.lang.annotation.RetentionPolicy.CLASS;
+import static java.lang.annotation.RetentionPolicy.RUNTIME;
 
 /**
  * Bind a method to a {@link TextWatcher TextWatcher} on the view for each ID specified.
@@ -32,7 +32,7 @@ import static java.lang.annotation.RetentionPolicy.CLASS;
  * @see TextWatcher
  */
 @Target(METHOD)
-@Retention(CLASS)
+@Retention(RUNTIME)
 @ListenerClass(
     targetType = "android.widget.TextView",
     setter = "addTextChangedListener",

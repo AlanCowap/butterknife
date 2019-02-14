@@ -4,8 +4,8 @@ android {
   compileSdkVersion versions.compileSdk
 
   compileOptions {
-    sourceCompatibility = JavaVersion.VERSION_1_7
-    targetCompatibility = JavaVersion.VERSION_1_7
+    sourceCompatibility = JavaVersion.VERSION_1_8
+    targetCompatibility = JavaVersion.VERSION_1_8
   }
 
   defaultConfig {
@@ -15,7 +15,7 @@ android {
     versionCode 1
     versionName '1.0.0'
 
-    testInstrumentationRunner 'android.support.test.runner.AndroidJUnitRunner'
+    testInstrumentationRunner 'androidx.test.runner.AndroidJUnitRunner'
   }
 
   lintOptions {
@@ -43,11 +43,9 @@ android {
 
     reflect {
       dimension 'runtime'
-      applicationIdSuffix '.reflect'
     }
     codegen {
       dimension 'runtime'
-      applicationIdSuffix '.codegen'
     }
   }
 
@@ -67,6 +65,6 @@ dependencies {
 
   androidTestImplementation deps.junit
   androidTestImplementation deps.truth
-  androidTestImplementation deps.support.test.runner
-  androidTestImplementation deps.support.test.rules
+  androidTestImplementation deps.androidx.test.runner
+  androidTestImplementation deps.androidx.test.rules
 }

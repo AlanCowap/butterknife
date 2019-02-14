@@ -1,7 +1,7 @@
 package butterknife;
 
-import android.support.annotation.IdRes;
 import android.view.View;
+import androidx.annotation.IdRes;
 import butterknife.internal.ListenerClass;
 import butterknife.internal.ListenerMethod;
 import java.lang.annotation.Retention;
@@ -23,6 +23,8 @@ import static java.lang.annotation.RetentionPolicy.RUNTIME;
  * Any number of parameters from
  * {@link OnItemLongClickListener#onItemLongClick(android.widget.AdapterView, android.view.View,
  * int, long) onItemLongClick} may be used on the method.
+ * <p>
+ * If the return type of the method is {@code void}, true will be returned from the listener.
  *
  * @see OnItemLongClickListener
  */
@@ -41,7 +43,7 @@ import static java.lang.annotation.RetentionPolicy.RUNTIME;
             "long"
         },
         returnType = "boolean",
-        defaultReturn = "false"
+        defaultReturn = "true"
     )
 )
 public @interface OnItemLongClick {
